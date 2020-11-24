@@ -1,8 +1,10 @@
 ---
-title: "projectProposal"
-author: "Michael Knight"
+title: "Project"
+author: "Michael Knight, Michael Dumars"
 date: "11/24/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -17,6 +19,8 @@ library(infer)
 
 
 arrests <- read.csv("arrests.csv")
+
+dim(arrests)
 
 
 
