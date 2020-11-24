@@ -1,6 +1,6 @@
 # 2820labproject
 
-## nfl arrests
+## NFL Arrests
 
 Anita Mukherjee, Michael Knight, Michael Dumars, Avi Goldberg			
 
