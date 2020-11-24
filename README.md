@@ -1,4 +1,4 @@
-# 2820labproject
+# 2820 Lab Project
 
 ## NFL Arrests
 
