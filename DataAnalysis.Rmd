@@ -1,0 +1,27 @@
+---
+title: "Project"
+author: "Michael Knight, Michael Dumars"
+date: "11/24/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(broom)
+library(infer)
+
+
+arrests <- read.csv("arrests.csv")
+
+dim(arrests)
+
+
+
+```
