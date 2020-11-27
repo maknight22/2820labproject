@@ -1,0 +1,77 @@
+---
+title: "FinalProject"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(broom)
+library(infer)
+
+arrests <- read.csv("arrests.csv")
+
+dim(arrests)
+
+NFLarrests <- arrests%>%
+  mutate(
+   margin_of_vic = home_score - away_score
+  )
+#create new variables that quantifies how close a game was. This is in hopes to see some sort of relationship between more exciting games and more arrests.
+
+ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = margin_of_vic>0)) +
+    geom_point(alpha = 0.5)
+#This plots the arrests against the margin of victory. It also distinguishes between colors such that home teams lost where the dots are red and won when dots are blue. Based of the plot, there seems to be a correlation between arrests and how close the game was as the data points increase towards 0. In addition, the variability of number of arrests seems to increase the closer you get to zero. Further investigation of both the mean and variability at different margin of victories should be done to see if there is a correlation. 
+
+ggplot(NFLarrests, aes(y = arrests, x = season)) +
+    geom_point(alpha = 0.5)
+#The number of arrests over time remain relatively constant. This could suggest that stadiums are not doing enough to reduce activity in stadiums.
+
+ggplot(NFLarrests, aes(y = arrests, x = home_team)) +
+    geom_point(alpha = 0.5) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+#This plots the home team versus the number of arrests made. There does appear to be a few stadiums that average more arrests than the others. Of these include both New York stadiums, Oakland, Pittsburgh and San Diego.
+
+ggplot(NFLarrests, aes(y = arrests, x = away_team)) +
+    geom_point(alpha = 0.5) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+#The away team was also compared to the number of arrests in order to show that the correlation made between arrests and home team was not random. Because the away team appears to be irrelevant to the number of arrests, we can start to conclude that the number of arrests can partly depend on what stadium we are in.
+
+ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = home_team)) +
+    geom_point(alpha = 0.5)
+#This compares the margin of victory with the home team and then we do the away team below.
+ 
+ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = away_team)) +
+    geom_point(alpha = 0.5)
+#To further visualize the previous suggestions, we compared the margin of victory to arrests while color coordinating teams. While no pattern seemed to emerge for the away teams, the home teams tended to have certain clusters of colors focused at the top.
+
+ggplot(NFLarrests, aes(y = arrests, x = week_num, color = home_team)) + 
+    geom_point(alpha = 0.5)
+#Compare the number of arrests to the week number, with colors for the home team.
+
+ggplot(NFLarrests, aes(y = arrests, x = day_of_week, color = home_team)) + 
+    geom_point(alpha = 0.5)
+#Plot the day of the week against the arrests with different colors for the home team
+
+ggplot(NFLarrests, aes(y = arrests, x = gametime_local, color = home_team)) + 
+    geom_point(alpha = 0.5)
+#Plots the arrests for each of the local game times, differentiated by home team.
+
+ggplot(NFLarrests, aes(x = arrests, fill = division_game)) + 
+    geom_histogram()  + 
+    facet_wrap( ~ division_game)
+#plots the arrests vs wether or not it is a division game.
+
+ggplot(NFLarrests, aes(x = arrests, fill = home_team)) + 
+    geom_histogram()  + 
+    facet_wrap( ~ day_of_week)
+#plots the arrests for a home team based on the day of the week
+
+
+ggplot(NFLarrests, aes(y = arrests, x = (home_score-away_score), color = (home_score-away_score>0))) + 
+    geom_point(alpha = 0.5)
+#Plots the arrests for the home team winning vs losing.
+
+```
