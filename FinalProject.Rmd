@@ -71,9 +71,22 @@ ggplot(NFLarrests, aes(x = arrests, fill = home_team)) +
     facet_wrap( ~ day_of_week)
 #plots the arrests for a home team based on the day of the week
 
+NFLarrests <- NFLarrests %>%
+  mutate(margin_of_vic = abs(margin_of_vic))
 
-ggplot(NFLarrests, aes(y = arrests, x = (home_score-away_score), color = (home_score-away_score>0))) + 
+OakArrests <- NFLarrests %>%
+  filter(home_team == "Oakland")
+
+ggplot(OakArrests, aes(y = arrests, x = margin_of_vic)) +
     geom_point(alpha = 0.5)
-#Plots the arrests for the home team winning vs losing.
+model_oak <- lm(arrests ~ margin_of_vic, data = OakArrests)
+summary(model_oak)
+confint(model_oak)
+
+PitArrests <- NFLarrests %>%
+  filter(home_team == "Pittsburgh")
+
+ggplot(PitArrests, aes(y = arrests, x = margin_of_vic)) +
+    geom_point(alpha = 0.5)
 
 ```
