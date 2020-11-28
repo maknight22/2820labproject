@@ -25,9 +25,6 @@ NFLarrests <- arrests%>%
   )
 #create new variables that quantifies how close a game was. This is in hopes to see some sort of relationship between more exciting games and more arrests.
 
-ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = margin_of_vic>0)) +
-    geom_point(alpha = 0.5)
-#This plots the arrests against the margin of victory. It also distinguishes between colors such that home teams lost where the dots are red and won when dots are blue. Based of the plot, there seems to be a correlation between arrests and how close the game was as the data points increase towards 0. In addition, the variability of number of arrests seems to increase the closer you get to zero. Further investigation of both the mean and variability at different margin of victories should be done to see if there is a correlation. 
 
 ggplot(NFLarrests, aes(y = arrests, x = season)) +
     geom_point(alpha = 0.5)
@@ -71,33 +68,63 @@ ggplot(NFLarrests, aes(x = arrests, fill = home_team)) +
     facet_wrap( ~ day_of_week)
 #plots the arrests for a home team based on the day of the week
 
+ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = margin_of_vic>0)) +
+    geom_point(alpha = 0.5)
+#This plots the arrests against the margin of victory. It also distinguishes between colors such that home teams lost where the dots are red and won when dots are blue. Based of the plot, there seems to be a correlation between arrests and how close the game was as the data points increase towards 0. In addition, the variability of number of arrests seems to increase the closer you get to zero. Further investigation of both the mean and variability at different margin of victories should be done to see if there is a correlation. 
+
 NFLarrests <- NFLarrests %>%
-  mutate(margin_of_vic = abs(margin_of_vic))
+  mutate(abs_margin_of_vic = abs(margin_of_vic))
+#this mutation makes sense because the data seems to be centered at the mean. It matters more how close the game is, and not who won.
+
+ggplot(NFLarrests, aes(y = arrests, x = abs_margin_of_vic, color = margin_of_vic>0)) +
+    geom_point(alpha = 0.5)
+#this is beared out in this chart.
+
+model_nfl <- lm(arrests ~ abs_margin_of_vic, data = NFLarrests)
+summary(model_nfl)
+confint(model_nfl)
+
+#using the overall nfl arrest data, we are more than 95% confident that there is a slight negative correlation between the margin of victory in an NFL game and the arrests during the game. However, by looking at the chart above, it is unclear if this is biased by outliers like New York or if it holds for all teams.
+
 
 #Looking at the home_team vs. arrests chart, the NY Giants, NY Jets, Oakland (now Las Vegas) Raiders, and Pittsburgh Steelers all have floor numbers of arrests that are greater than zero, so we are going to isolate each team's home game data to see their individual margin of victory versus arrest relationships.
+
+NFLarrests <- NFLarrests %>%
+  mutate(margin_of_vic = abs(margin_of_vic))
 
 OakArrests <- NFLarrests %>%
   filter(home_team == "Oakland")
 
-ggplot(OakArrests, aes(y = arrests, x = margin_of_vic)) +
-    geom_point(alpha = 0.5)
 model_oak <- lm(arrests ~ margin_of_vic, data = OakArrests)
 summary(model_oak)
 confint(model_oak)
+#The 95% confidence interval for the Oakland Raiders is [-0.4595502  0.2598422] This means we are less than 97.5 percent confident that there is a negative relationship.
 
-PitArrests <- NFLarrests %>%
+ggplot(OakArrests, aes(y = arrests, x = abs_margin_of_vic)) +
+    geom_point() +
+    geom_abline(slope = -0.09985, intercept = 18.87948, color = "red")
+    
+#Created a visualization of this team's margin_of_vic versus arrest relationship, which will be used while creating a linear regression
+
+PittArrests <- NFLarrests %>%
   filter(home_team == "Pittsburgh")
 
-ggplot(PitArrests, aes(y = arrests, x = margin_of_vic)) +
-    geom_point(alpha = 0.5)
+ggplot(PittArrests, aes(y = arrests, x = margin_of_vic)) +
+    geom_point() +
+    geom_abline(slope = -0.1948, intercept = 18.9663, color = "red")
+
+model_pitt <- lm(arrests ~ margin_of_vic, data = PittArrests)
+summary(model_pitt)
+confint(model_pitt)
+#The 95% confidence interval for the Pittsburg Steelers is [-0.6806636  0.2909916] This means we are less than 97.5 percent confident that there is a negative relationship.
+
+
+
+#Created a visualization of this team's margin_of_vic versus arrest relationship
 
 NYGiants_arrests <- NFLarrests %>%
   filter(home_team == "New York Giants")
 head(NYGiants_arrests)
-
-ggplot(NYGiants_arrests, aes(y = arrests, x = margin_of_vic)) +
-    geom_point(alpha = 0.5)
-#Created a visualization of this team's margin_of_vic versus arrest relationship, which will be used while creating a linear regression
 
 Giants_model <- lm(arrests ~ margin_of_vic, data = NYGiants_arrests)
 summary(Giants_model)
@@ -114,17 +141,14 @@ NYJets_arrests <- NFLarrests %>%
   filter(home_team == "New York Jets")
 head(NYJets_arrests)
 
-ggplot(NYJets_arrests, aes(y = arrests, x = margin_of_vic)) +
-    geom_point(alpha = 0.5)
-#Created a visualization of this team's margin_of_vic versus arrest relationship, which will be used while creating a linear regression
-
 Jets_model <- lm(arrests ~ margin_of_vic, data = NYJets_arrests)
 summary(Jets_model)
 
 confint(Jets_model)
 #The 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Jets home games is [-0.2611174, 0.3649023]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between these two values. 
 
-ggplot(NYGiants_arrests, aes(x = margin_of_vic, y = arrests)) + 
+ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) + 
     geom_point() +
     geom_abline(slope = 0.05189, intercept = 20.79486, color = "red")
+#Created a visualization of this team's margin_of_vic versus arrest relationship
 ```
