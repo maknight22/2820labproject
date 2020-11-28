@@ -1,6 +1,8 @@
 ---
-title: "FinalProject"
-output: html_document
+title: "Final Project"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
