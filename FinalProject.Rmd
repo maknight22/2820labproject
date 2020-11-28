@@ -48,6 +48,10 @@ ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = away_team)) +
   geom_point(alpha = 0.5)
 #To further visualize the previous suggestions, we compared the margin of victory to arrests while color coordinating teams. While no pattern seemed to emerge for the away teams, the home teams tended to have certain clusters of colors focused at the top.
 
+ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = OT_flag)) +
+  geom_point(alpha = 0.5)
+#Overtime games typically have much smaller margins of victory. First we need to see how many there are and what the variability in this relationship looks like. 
+
 ggplot(NFLarrests, aes(y = arrests, x = week_num, color = home_team)) +
   geom_point(alpha = 0.5)
 #Compare the number of arrests to the week number, with colors for the home team.
@@ -140,7 +144,7 @@ summary(Giants_model)
 confint(Giants_model)
 #The 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Giants home games is [-0.7601545, -0.04792955]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between -0.7601545 and -0.04792955.
 
-ggplot(NYGiants_arrests, aes(x = margin_of_vic, y = arrests)) +
+ggplot(NYGiants_arrests, aes(x = margin_of_vic, y = arrests, color = OT_flag)) +
   geom_point() +
   geom_abline(slope = -0.4040,
               intercept = 26.6669,
@@ -163,4 +167,11 @@ ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) +
               intercept = 20.79486,
               color = "red")
 #Created a visualization of this team's margin_of_vic versus arrest relationship
+
+OTGames_arrests <- NFLarrests %>%
+  filter(OT_flag != "")
+head(OTGames_arrests)
+
+ggplot(OTGames_arrests, aes(x = margin_of_vic, y = arrests)) +
+  geom_point()
 ```
