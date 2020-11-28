@@ -9,6 +9,9 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+  The data we are working with for this project examines public records that report the number of arrests that took place during the years 2011 to 2015 at National Football League stadiums. There are 5 numerical variables (season, week_number, home_score, away_score, arrests) and 6 categorical variables (day_of_week, gametime_local, home_team, away_team, OT_flag, division_game). We will examine the relationship between the game times, outcomes, and time of year of an NFL game all relative to the number of arrests at the stadium during the game. First sift through the data to find any possible confounding variables. Our hypothesis is there is a positive correlation between tightly contested games such as in-division, close margin of victory, or overtime contests. To test this hypothesis, we will graph arrests vs margin of victory for the whole NFL and then zoom in on certain teams, to show that there is typically a negative correlation.
+  Our project could provide valuable insight into the public safety ramifications of attending an NFL game. While we hope to show that there is a relationship between the margin of victory and the safety of the game, this project could also open the doors to others who wish to investigate the root of this relationship. 
+
 ```{r}
 library(ggplot2)
 library(dplyr)
