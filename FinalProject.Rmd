@@ -122,6 +122,13 @@ NFLarrests <- NFLarrests %>%
 We mutate here to observe the absolute value of the margin of victory. The data seems centered at the mean and we are more interested in how close the game was than who won. 
 
 ```{r}
+ggplot(NFLarrests, aes(y = arrests, x = abs_margin_of_vic, color = home_team)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(~home_team)
+```
+After mutating the data so that we look at the absolute margins of victory, we isolated each team just to see the general trends for each team. Looking at these graphs, the New York Giants, the New York Jets, Pittsburgh, and San Diego seem to have significant relationships between margin of victory and arrest,so we will conduct further analysis on isolated data for these teams. 
+
+```{r}
 ggplot(NFLarrests,
        aes(y = arrests, x = abs_margin_of_vic, color = margin_of_vic > 0)) +
   geom_point(alpha = 0.5)
