@@ -254,6 +254,26 @@ ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) +
 
 Here we have created a visualization of the Jet's margin of victory versus arrest relationship.
 
+
+```{r}
+SanDiego_arrests <- NFLarrests %>%
+  filter(home_team == "San Diego")
+head(SanDiego_arrests)
+SanDiego_model <- lm(arrests ~ margin_of_vic, data = SanDiego_arrests)
+summary(SanDiego_model)
+confint(SanDiego_model)
+```
+Constructing a 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at San Diego home. This value lies between [-0.8175626, 0.2748292]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between these two values.
+
+```{r}
+ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) +
+  geom_point() +
+  geom_abline(slope = -0.2714,
+              intercept = 27.7093,
+              color = "red")
+```
+Here we have created a visualization of San Diego's margin of victory versus arrest relationship.
+
 ```{r}
 OTGames_arrests <- NFLarrests %>%
   filter(OT_flag != "")
