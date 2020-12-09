@@ -151,9 +151,25 @@ confint(model_nfl)
 ggplot(NFLarrests,
        aes(y = arrests, x = abs_margin_of_vic, color = margin_of_vic > 0)) +
   geom_point(alpha = 0.5) + geom_abline(slope = -.05437, intercept = 7.21037, color = "red")
+
 ```
 
+
   Looking at the home_team vs. arrests chart, the NY Giants, NY Jets, Oakland (now Las Vegas) Raiders, and Pittsburgh Steelers all have floor numbers of arrests that are greater than zero, so we are going to isolate each team's home game data to see their individual margin of victory versus arrest relationships.
+  
+```{r}
+mod_results <- data.frame(observed = NFLarrests$arrests[0:966], predicted = model_nfl$fitted.values, residual = model_nfl$residuals)
+
+ggplot(mod_results, aes(y = residual, x = predicted)) + 
+    geom_point() + 
+    geom_hline(yintercept = 0)
+
+ggplot(mod_results, aes(sample = residual)) + 
+    geom_qq()
+
+```
+
+From this we cannot conclude that the residuals are normally distributed. Therefore the second assumption of the model fails.
 
 ```{r}
 NFLarrests <- NFLarrests %>%
