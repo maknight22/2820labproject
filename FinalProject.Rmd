@@ -9,9 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 # Introduction
-  The data we are working with for this project examines public records that report the number of arrests that took place during the years 2011 to 2015 at National Football League stadiums. There are 5 numerical variables (season, week_number, home_score, away_score, arrests) and 6 categorical variables (day_of_week, gametime_local, home_team, away_team, OT_flag, division_game). We will examine the relationship between the game times, outcomes, and time of year of an NFL game all relative to the number of arrests at the stadium during the game. First sift through the data to find any possible confounding variables. Our hypothesis is there is a positive correlation between tightly contested games such as in-division, close margin of victory, or overtime contests. To test this hypothesis, we will graph arrests vs margin of victory for the whole NFL and then zoom in on certain teams, to show that there is typically a negative correlation.
+  The data we are working with for this project examines public records that report the number of arrests that took place during the 2011 to 2015 seasons at National Football League stadiums. There are 5 numerical variables (season, week_number, home_score, away_score, arrests) and 6 categorical variables (day_of_week, gametime_local, home_team, away_team, OT_flag, division_game). We will examine the relationship between the game times, outcomes, and time of year of an NFL game all relative to the number of arrests at the stadium during the game. First we looked through the data to find any possible confounding variables. Our hypothesis is there is a positive correlation between tightly contested games such as in-division, close margin of victory, or overtime contests. To test this hypothesis, we graphed arrests vs margin of victory for the whole NFL and then focused in on certain teams, to show that there is typically a negative correlation.
   
-  Our project could provide valuable insight into the public safety ramifications of attending an NFL game. While we hope to show that there is a relationship between the margin of victory and the safety of the game, this project could also open the doors to others who wish to investigate the root of this relationship. 
+  Our project could provide valuable insight for public safety ramifications of attending an NFL game. While we hope to show that there is a relationship between the margin of victory and the safety of the game, this project could also open the doors to others who wish to investigate the causes of this relationship. 
 
 # Data analysis
 ```{r}
@@ -30,19 +30,21 @@ NFLarrests <- arrests %>%
 ```
 
   Here we have created a new variable that quantifies how close the final score of a game was. We hope to see a relationship between games that are closer (typically more exciting) and the number of arrests at the game.
+  
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = season)) +
   geom_point(alpha = 0.5)
 ```
 
-  The number of arrests seems to remain relatively constant across all seasons. This could be indicative of NFL stadiums not attempting to increase the safety of stadiums. A high number of arrests could also mean that the safety is taken more seriously and they are willing to arrest people who are being unsafe.
+  The number of arrests seems to remain relatively constant across all seasons. This could be indicative of NFL stadiums not attempting to increase the safety of stadiums. A high number of arrests could also mean that stadium safety is taken more seriously.
+  
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = home_team)) +
   geom_point(alpha = 0.5) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 
-  This plots the home team versus the number of arrests made. There does appear to be a few stadiums that average more arrests than the others. Of these include New York (this holds for both NY teams, so possibly indicative of stadium conditions and not the teams), Oakland, Pittsburgh and San Diego.
+  This plots the home team against the number of arrests made. There are a few stadiums that average more arrests than the others. Of these include New York (this holds for both NY teams), Oakland, Pittsburgh and San Diego stadiums.
 
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = away_team)) +
@@ -50,7 +52,7 @@ ggplot(NFLarrests, aes(y = arrests, x = away_team)) +
 
 ```
 
-  The away team was also compared to the number of arrests in order to show that the correlation made between arrests and home team was not random. Because the away team appears to be irrelevant to the number of arrests, we can start to conclude that the number of arrests can partly depend on what stadium we are in are not the teams playing.
+  The away team was also compared to the number of arrests to show that the correlation made between arrests and home team was not random. Because the away team appears to be irrelevant to the number of arrests, we conclude that the number of arrests can depend on the stadium security and city regulations instead of the fanbases.
 
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = home_team)) +
@@ -58,28 +60,29 @@ ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = home_team)) +
 
 ```
 
-  This compares the margin of victory with the home team. This seems to indicate that the the smaller the margin of victory, the more arrests we see. It also is consistent that we see the teams we noted above as having the most arrests.
+  This graph shows the margin of victory for each home team. This indicates that smaller the margins of victory correlate with higher arrests.
+  
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = away_team)) +
   geom_point(alpha = 0.5)
 
 ```
 
-  To further visualize the previous suggestions, we compared the margin of victory to arrests while color coordinating away teams. No pattern was seen between away team and number of arrests but we continue to see the trend of a low margin of victory being associated with high arrests.
+  This plot has different colors for each away team. There is no discernible pattern between away team and number of arrests but there is a trend of a low margin of victory associated with high arrests.
 
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = margin_of_vic, color = OT_flag)) +
   geom_point(alpha = 0.5)
 ```
 
-  Overtime games typically have much smaller margins of victory. First we need to see how many there are and what the variability in this relationship looks like. While there are several overtime games that show high arrest numbers, they do not seem more prone to arrests than other games with low margin of victory.
+  Overtime games typically have much smaller margins of victory. First we need to see how many there are and what the variability in this relationship looks like. While there are several overtime games that show high arrest numbers, they do not seem more prone to arrests than close games.
 
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = week_num, color = home_team)) +
   geom_point(alpha = 0.5)
 ```
 
-  Here we compare the number of arrests with the week number that the game took place in. No discernible effect by the week number can be seen here although the teams with higher arrests noted before can be distinguished. 
+  Here we compare the number of arrests with the week number that the game took place in. No discernible effect by the week number can be seen here although the teams with higher arrests noted before stand out.
   
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = day_of_week, color = home_team)) +
@@ -95,7 +98,7 @@ ggplot(NFLarrests, aes(y = arrests, x = gametime_local, color = home_team)) +
 
 ```
 
-  When looking at the local game time, it does seem intially like there is a pattern. It appears there are three big spikes in the game times that have more arrests. This is because NFL games are scheduled in EST, and the teams we noted above as higher risk are mostly in EST so their games all align and create these spikes. The dips are teams who are not in EST and also do not have high number of arrests. 
+  When looking at the local game time, there appears three big spikes in the game times that have more arrests. This is because NFL games are scheduled in EST, and the teams we noted above as higher risk are mostly in EST so their games all align and create these spikes. The dips are teams who are not in EST and also do not have high number of arrests. 
 
 ```{r}
 ggplot(NFLarrests, aes(x = arrests, fill = division_game)) +
@@ -112,7 +115,7 @@ ggplot(NFLarrests,
 
 ```
 
-  This plots the arrests against the margin of victory. It also distinguishes between colors such that home teams lost where the dots are red and won when dots are blue. Based of the plot, there seems to be a correlation between arrests and how close the game was as the data points increase towards 0. In addition, the variability of number of arrests seems to increase the closer you get to zero. Further investigation of both the mean and variability at different margin of victories should be done to see if there is a correlation.
+  This plots the arrests against the margin of victory. Home team looses are in red, while wins are in blue. Based of the plot, there seems to be a correlation between arrests and how close the game was as the data points increase towards 0. In addition, the variability of number of arrests seems to increase the closer you get to zero. Further investigation of both the mean and variability at different margin of victories should be done to see if there is a correlation.
 
 ```{r}
 NFLarrests <- NFLarrests %>%
@@ -120,7 +123,7 @@ NFLarrests <- NFLarrests %>%
 
 ```
 
-  We mutate here to observe the absolute value of the margin of victory. The data seems centered at the mean and we are more interested in how close the game was than who won. 
+  We mutate here to observe the absolute value of the margin of victory. The data seems centered at the mean and we are more interested in how close the game was than who won.
 
 ```{r}
 ggplot(NFLarrests, aes(y = arrests, x = abs_margin_of_vic, color = home_team)) +
@@ -128,7 +131,7 @@ ggplot(NFLarrests, aes(y = arrests, x = abs_margin_of_vic, color = home_team)) +
   facet_wrap(~home_team)
 ```
   
-  After mutating the data so that we look at the absolute margins of victory, we isolated each team just to see the general trends for each team. Looking at these graphs, the New York Giants, the New York Jets, Pittsburgh, and San Diego seem to have significant relationships between margin of victory and arrest,so we will conduct further analysis on isolated data for these teams. 
+  After mutating the data so that we look at the absolute margins of victory, we isolated each team to investigate the general trends for each team. Looking at these graphs, the New York Giants, the New York Jets, Pittsburgh, and San Diego seem to have significant relationships between margin of victory and arrest,so we will conduct further analysis on isolated data for these teams. We ruled out many teams because they seem to be safer stadiums, and have lower range data that is less interesting.
 
 ```{r}
 ggplot(NFLarrests,
@@ -136,7 +139,7 @@ ggplot(NFLarrests,
   geom_point(alpha = 0.5)
 ```
 
-  From visual analysis, it seems that most of the highest arrest games also coincide with the lowest margin of victory games. This could be indicative of a relationship between margin of victory and arrests.
+  From visual analysis, most of the highest arrest games coincide with the lowest margin of victory games. This could be indicative of a relationship between margin of victory and arrests. However, noting that fans may leave during blowout contests, there may be a confounding variable of stadium population.
 
 ```{r}
 model_nfl <- lm(arrests ~ abs_margin_of_vic, data = NFLarrests)
@@ -144,7 +147,7 @@ summary(model_nfl)
 confint(model_nfl)
 ```
 
-  Using the overall Nfl arrest data, we are 95% confident that there is a slight negative correlation between the margin of victory in an NFL game and the arrests during the game. However, by looking at the chart above, it is unclear if this is biased by outliers like New York or if it holds for all teams.
+  Using the overall Nfl arrest data, we are 95% confident that there is a slight negative correlation between the margin of victory in an NFL game and the arrests during the game. However, by looking at the chart above, it is unclear if this is biased by outliers like New York or if it holds for all teams. However, this may be unreliable since there is only an R-squared of 0.00285.
 
 ```{r}
 
@@ -153,7 +156,6 @@ ggplot(NFLarrests,
   geom_point(alpha = 0.5) + geom_abline(slope = -.05437, intercept = 7.21037, color = "red")
 
 ```
-
 
   Looking at the home_team vs. arrests chart, the NY Giants, NY Jets, Oakland (now Las Vegas) Raiders, and Pittsburgh Steelers all have floor numbers of arrests that are greater than zero, so we are going to isolate each team's home game data to see their individual margin of victory versus arrest relationships.
   
@@ -192,7 +194,7 @@ summary(model_oak)
 confint(model_oak)
 ```
 
-  From the summary, we extract the values of the slope and interval, in order to create a best fit line. In addition, the 95% confidence interval for the Oakland Raiders is [-0.4595502  0.2598422]. Because this interval contains positive and negative values, we can not establish a relatively confident relationship between the values.
+  From the summary, we extract the values of the slope and interval, in order to create a best fit line. In addition, the 95% confidence interval for the Oakland Raiders is [-0.4595502  0.2598422]. Because this interval contains positive and negative values, we can not establish a relatively confident relationship between the values. However, this may be unreliable since there is only an R-squared of 0.008993.
 
 ```{r}
 ggplot(OakArrests, aes(y = arrests, x = abs_margin_of_vic)) +
@@ -222,8 +224,7 @@ summary(model_pitt)
 confint(model_pitt)
 ```
 
-  The 95% confidence interval for the Pittsburg Steelers is [-0.6806636  0.2909916] Because this interval contains positive and negative values, we can not establish a relatively confident relationship between the values.
-Created a visualization of this team's margin of victory versus arrest relationship.
+  The 95% confidence interval for the Pittsburg Steelers is [-0.6806636  0.2909916] Because this interval contains positive and negative values, we can not establish a relatively confident relationship between the values. However, this may be unreliable since there is only an R-squared of 0.01705.
 
 ```{r}
 NYGiants_arrests <- NFLarrests %>%
@@ -239,7 +240,7 @@ summary(Giants_model)
 confint(Giants_model)
 ```
 
-  Using a linear regression model, we compared the margin of victory to arrests in the New York Giants data set. From the summary, we can see the residuals, intercepts and slopes that we can use for creating a line that estimates the data. The 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Giants home games is [-0.7601545, -0.04792955]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between -0.7601545 and -0.04792955. The fact that the confidence interval does not contain any positive values means that we can conclude with relative confidence that the greater the margin of victory, the fewer arrests will be made.
+  Using a linear regression model, we compared the margin of victory to arrests in the New York Giants data set. From the summary, we can see the residuals, intercepts and slopes that we can use for creating a line that estimates the data. The 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Giants home games is [-0.7601545, -0.04792955]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between -0.7601545 and -0.04792955. The fact that the confidence interval does not contain any positive values means that we can conclude with relative confidence that the greater the margin of victory, the fewer arrests will be made. However, this may be unreliable since there is only an R-squared of 0.1219.
 
 ```{r}
 ggplot(NYGiants_arrests, aes(x = margin_of_vic, y = arrests, color = OT_flag)) +
@@ -260,7 +261,7 @@ summary(Jets_model)
 confint(Jets_model)
 ```
 
-  Replicating our work for the New York Giants, we collected the values of residuals, slope and intercepts, and continue by constructing a 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Jets home. This value lies between [-0.2611174, 0.3649023]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between these two values.
+  Replicating our work for the New York Giants, we collected the values of residuals, slope and intercepts, and continue by constructing a 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Jets home. This value lies between [-0.2611174, 0.3649023]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between these two values. However, this may be unreliable since there is only an R-squared of 0.002955.
 
 ```{r}
 ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) +
@@ -276,15 +277,15 @@ ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) +
 ```{r}
 SanDiego_arrests <- NFLarrests %>%
   filter(home_team == "San Diego")
-head(SanDiego_arrests)
 SanDiego_model <- lm(arrests ~ margin_of_vic, data = SanDiego_arrests)
 summary(SanDiego_model)
 confint(SanDiego_model)
 ```
-  Constructing a 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at San Diego home. This value lies between [-0.8175626, 0.2748292]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between these two values.
+  
+  Constructing a 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at San Diego home. This value lies between [-0.8175626, 0.2748292]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between these two values. However, this may be unreliable since there is only an R-squared of 0.02539.
 
 ```{r}
-ggplot(NYJets_arrests, aes(x = margin_of_vic, y = arrests)) +
+ggplot(SanDiego_model, aes(x = margin_of_vic, y = arrests)) +
   geom_point() +
   geom_abline(slope = -0.2714,
               intercept = 27.7093,
@@ -328,6 +329,7 @@ var.test(low_mov$arrests, high_mov$arrests)
 # Conclusion
   When examining the data, we found less trends than we initially expected. It seems most teams had a relatively low amount of arrests. The most significant trend we found was a slight negative correlation between the absolute value of the margin of victory and the number of arrests at the New York Giants home games. Though when comparing the data between the New York Giants and the New York Jets an interesting difference was found. While both of these teams play their home games at MetLife Stadium, the Giants experienced more arrests with lower margin of victory, yet the Jets did not show the same trend. This could be caused by a number of factors, such as differences in fan base or that the Jets have had significantly less success than the Giants in recent years.  
     Additionally, when we compared the number of arrests of Oakland, Pittsburgh, and both New York teams to the NFL average, they were significantly different. When running a one sample t-test we found a p < 2.2e-16, showing that these cities have higher arrest numbers than the NFL on average.  
-    One final find of ours was the difference in variability in arrests between games with a high margin of victory (>7) and games with a low margin of victory (<=7). A significant difference was found between these two variances, leading us to believe that the crowds at games with low margin of victory are more volatile and possibly more dangerous. 
+    One final find of ours was the difference in variability in arrests between games with a high margin of victory (>7) and games with a low margin of victory (<=7). A significant difference was found between these two variances, leading us to believe that the crowds at games with low margin of victory are more volatile and possibly more dangerous.
+    One possible confounding variable for our study is the population of NFL stadiums. This dataset does not have a varaible for stadium size, our amount of police presence at NFL games for each city. Further, we do not know the percent of the stadium that is full at the time of the arrests, nor the time of arrest during the game. Further it does not seem that there is much of a linear correlation since the R-squared values are so low on our graphs.
     In totality, NFL stadiums appear to be relatively safe and the fact that they are making arrests, suggests that teams do have interest in public safety. Future research could look into the relationship between the success of a team and the number of arrests or possibly explore more data from the cities in which these teams are located. 
 	
