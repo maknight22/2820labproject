@@ -242,6 +242,7 @@ confint(Giants_model)
 
   Using a linear regression model, we compared the margin of victory to arrests in the New York Giants data set. From the summary, we can see the residuals, intercepts and slopes that we can use for creating a line that estimates the data. The 95% confidence interval for the slope of the relationship between the margin_of_victory and number of arrests at NY Giants home games is [-0.7601545, -0.04792955]. This indicates that though we do not know the true correlation coefficient between these two variables, we are 95% confident that the true value lies between -0.7601545 and -0.04792955. The fact that the confidence interval does not contain any positive values means that we can conclude with relative confidence that the greater the margin of victory, the fewer arrests will be made. However, this may be unreliable since there is only an R-squared of 0.1219.
 
+
 ```{r}
 ggplot(NYGiants_arrests, aes(x = margin_of_vic, y = arrests, color = OT_flag)) +
   geom_point() +
@@ -325,6 +326,24 @@ var.test(low_mov$arrests, high_mov$arrests)
 ```
 
   After the initial examination their appeared to be a higher variance in the number of arrests when the margin of victory approached zero. In order to examine the significance, the data set was filtered into to two separate data sets. One where the margin of victory was less than or equal 7, and another that was greater than 7(value of a touchdown).We then conducted an F-statistic test between the corresponding variances. Our 95% confidence interval gave us a ratio of variance between [1.023641, 1.464969] with a ratio of variances 1.223859. Because our smaller margin of victories was in the numerator, this ratio does in fact reaffirm our prediction that the variance is greater in lower margin of victoriy games.
+=======
+NFLarrests <- NFLarrests %>%
+  mutate(margin_of_vic = abs(margin_of_vic))
+
+OakArrests <- NFLarrests %>%
+  filter(home_team == "Oakland")
+
+ggplot(OakArrests, aes(y = arrests, x = margin_of_vic)) +
+    geom_point(alpha = 0.5)
+model_oak <- lm(arrests ~ margin_of_vic, data = OakArrests)
+summary(model_oak)
+confint(model_oak)
+
+PitArrests <- NFLarrests %>%
+  filter(home_team == "Pittsburgh")
+
+ggplot(PitArrests, aes(y = arrests, x = margin_of_vic)) +
+    geom_point(alpha = 0.5)
 
 # Conclusion
   When examining the data, we found less trends than we initially expected. It seems most teams had a relatively low amount of arrests. The most significant trend we found was a slight negative correlation between the absolute value of the margin of victory and the number of arrests at the New York Giants home games. Though when comparing the data between the New York Giants and the New York Jets an interesting difference was found. While both of these teams play their home games at MetLife Stadium, the Giants experienced more arrests with lower margin of victory, yet the Jets did not show the same trend. This could be caused by a number of factors, such as differences in fan base or that the Jets have had significantly less success than the Giants in recent years.  
